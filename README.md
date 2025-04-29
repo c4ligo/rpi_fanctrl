@@ -57,9 +57,9 @@ Default configuration for the official [Raspberry Pi Active Cooler](https://www.
 **How to connect the fan to the pins of the Raspberry Pi:**
 Depending on the fan, some soldering may be required. For the official fan, the wires have to be cut from the fan connector and soldered to female jumper cables. The stated colors of the cables are for the official fan and might be different for other fans.
 
-- Connect the power wire (red <font color="red">█</font>) of the fan to any of the 5V pins (e.g. pin 4).
-- Connect the ground wire (black <font color="black">█</font>) of the fan to any of the ground pins (e.g. pin 6).
-- Connect the PWM signal wire (blue <font color="blue">█</font>) of the fan to any PWM capable GPIO pins. The program expects GPIO 18 by default, so if you use another pin, this has to be changed in the environmental variables.
+- Connect the power wire (red) of the fan to any of the 5V pins (e.g. pin 4).
+- Connect the ground wire (black) of the fan to any of the ground pins (e.g. pin 6).
+- Connect the PWM signal wire (blue) of the fan to any PWM capable GPIO pins. The program expects GPIO 18 by default, so if you use another pin, this has to be changed in the environmental variables.
 
 ![Schematics wiring diagram of a fan connected to the GPIO pins of a raspberry pi](/assets/rpi_fanctrl_wiring.png)
 
