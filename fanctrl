@@ -1,0 +1,141 @@
+#!/bin/bash
+# fanctrl
+
+#Default variables and directories
+SERVICE_NAME="rpi_fanctrl.service"
+ENV_PATH="/usr/local/bin/rpi_fanctrl/.env"
+STAT_PATH="/usr/local/bin/rpi_fanctrl/stats.csv"
+LOG_PATH="/usr/local/bin/rpi_fanctrl/event.log"
+WRAPPER_SCRIPT="/usr/local/bin/fanctrl"
+# Updated variables and directories by installer script will be inserted below
+
+
+print_usage() {
+    echo "Usage: sudo $0 [--start | --stop | --restart | --env | --stat | --log | --info | --uninstall]"
+    echo ""
+    echo "  --start ....... Start the $SERVICE_NAME if not already running"
+    echo "  --stop ........ Stop the $SERVICE_NAME if it is running"
+    echo "  --restart ..... Restart the $SERVICE_NAME if it is running, else start it"
+    echo "  --env ......... Edit the environment file ($ENV_PATH) and optionally restart the service"
+    echo "  --systemd ..... Edit the systemd service file ($SERVICE_PATH) and optionally reload systemd and restart the service"
+    echo "  --stat ........ View the statistics file ($STAT_PATH) if logging statistics is enabled"
+    echo "  --log ......... View the log file ($LOG_PATH) if logging is enabled"
+    echo "  --info ........ View information on the directories where the program files are installed"
+    echo "  --uninstall ... Uninstall the rpi_fanctrl program"
+}
+
+check_status() {
+    systemctl is-active --quiet "$SERVICE_NAME"
+}
+
+case "$1" in
+    --start)
+        if check_status; then
+            echo "$SERVICE_NAME is already running."
+        else
+            echo "Starting $SERVICE_NAME..."
+            sudo systemctl start "$SERVICE_NAME"
+        fi
+        ;;
+    --stop)
+        if check_status; then
+            echo "Stopping $SERVICE_NAME..."
+            sudo systemctl stop "$SERVICE_NAME"
+        else
+            echo "$SERVICE_NAME is not running."
+        fi
+        ;;
+    --restart)
+        if check_status; then
+            echo "Restarting $SERVICE_NAME..."
+            sudo systemctl restart "$SERVICE_NAME"
+        else
+            echo "$SERVICE_NAME is not running. Starting it..."
+            sudo systemctl start "$SERVICE_NAME"
+        fi
+        ;;
+    --env)
+        if [ -f "$ENV_PATH" ]; then
+            sudo ${EDITOR:-nano} "$ENV_PATH"
+            read -p "Do you want to restart $SERVICE_NAME with the new environment variables? (y/n): " yn
+            case $yn in
+                [Yy]* )
+                    echo "Restarting $SERVICE_NAME..."
+                    sudo systemctl restart "$SERVICE_NAME"
+                    ;;
+                * )
+                    echo "Skipped restarting the service."
+                    ;;
+            esac
+        else
+            echo "Environment file not found at $ENV_PATH"
+            exit 1
+        fi
+        ;;
+    --systemd)
+        sudo ${EDITOR:-nano} "$SERVICE_PATH"
+        read -p "Do you want to reload systemd and restart $SERVICE_PATH? (y/n): " yn
+        case $yn in
+            [Yy]* )
+                echo "Reloading systemctl daemon..."
+                sudo systemctl daemon-reload
+                echo "Restarting $SERVICE_NAME..."
+                sudo systemctl restart "$SERVICE_NAME"
+                ;;
+            * )
+                echo "Skipped reloading systemd and restarting the service."
+                ;;
+        esac
+        ;;
+    --stat)
+        if [ -f "$STAT_PATH" ]; then
+            sudo ${EDITOR:-nano} "$STAT_PATH"
+        else
+            echo "Statistics file not found at $STAT_PATH"
+            exit 1
+        fi
+        ;;    
+    --log)
+        if [ -f "$LOG_PATH" ]; then
+            sudo ${EDITOR:-nano} "$LOG_PATH"
+        else
+            echo "Statistics file not found at $LOG_PATH"
+            exit 1
+        fi
+        ;;
+    --info)
+        echo "Installation directories:"
+        echo "Program: $INSTALL_PATH"
+        echo "Systemd service file: $SERVICE_PATH"
+        echo "Environmental variables: $ENV_PATH"
+        echo "Statistics log (if enabled): $STAT_PATH"
+        echo "Event log (if enabled): $LOG_PATH"
+        echo "Wrapper script: $WRAPPER_SCRIPT"
+        echo "Uninstall script: $UNINSTALL_SCRIPT"
+        ;;
+    --uninstall)
+        read -p "Are you sure you want to uninstall the rpi_fanctrl program? (y/n): " yn
+        case $yn in
+            [Yy]* )
+            bash "$UNINSTALL_SCRIPT"
+            ;;
+            * )
+            ;;
+        esac
+        ;;  
+    "" )
+        if check_status; then
+            echo "$SERVICE_NAME is currently running."
+        else
+            echo "$SERVICE_NAME is not running."
+        fi
+        echo ""
+        print_usage
+        ;;
+    *)
+        echo "Invalid option: $1"
+        echo ""
+        print_usage
+        exit 1
+        ;;
+esac

@@ -1,0 +1,14 @@
+# Ensure all text files use LF line endings in Git
+* text=auto eol=lf
+
+# Treat these as binary files (no diffing)
+*.png binary
+
+# Explicitly mark Shell scripts as text with LF
+*.sh text eol=lf
+
+# Rust files
+*.rs text eol=lf
+
+# Markdown files (e.g., README)
+*.md text eol=lf

@@ -1,0 +1,22 @@
+# === Rust specific ===
+/target/
+**/*.rs.bk
+
+# === Temporary/backup files ===
+*.log
+*.tmp
+*.temp
+
+# === macOS system files ===
+.DS_Store
+
+# === Vim swap files ===
+*.swp
+*.swo
+
+# === VS Code settings (optional) ===
+.vscode/
+
+# === Other ===
+/CACHE*
+/.rustc_info.json
