@@ -78,13 +78,13 @@ An automatic install script `install.sh` is included which compiles and installs
     In the terminal go to the downloaded rpi_fanctrl directory containing the install script (assuming the directory is located in your home directory):
 
     ```Bash
-    ~ $ cd rpi_fanctrl
+    cd rpi_fanctrl
     ```
 
     Then run the following to make the script executable:
 
     ```Bash
-    ~/rpi_fanctrl $ chmod +x install
+    chmod +x install.sh
     ```
 
     Using the GUI, right click the script file and select 'Properties'. Then go to the 'Permissions' tab and set 'Execute' to 'Anyone'.
