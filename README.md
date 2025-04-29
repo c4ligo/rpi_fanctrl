@@ -97,7 +97,7 @@ An automatic install script `install.sh` is included which compiles and installs
     If you used the terminal to make the script executable, next run:
 
     ```Bash
-    ~/rpi_fanctrl $ ./install.sh
+    ./install.sh
     ```
 
     Using the GUI, double click the script file and select 'Execute in Terminal'.
